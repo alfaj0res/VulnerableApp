@@ -160,7 +160,8 @@ function maybeLoadReferrerLeakDemo(level) {
   }
 
   externalCard.classList.remove("hidden");
-  externalImage.referrerPolicy = "unsafe-url";
+  // The page URL carries the reset token, so it must never be sent as a Referer
+  externalImage.referrerPolicy = "no-referrer";
   externalImage.src =
     "https://dummyimage.com/320x120/e5e7eb/374151.png&text=Third-party+image";
 }

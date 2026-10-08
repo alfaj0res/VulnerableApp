@@ -198,8 +198,10 @@ public class VulnerableAppConfiguration {
             protected MultipartResolver lookupMultipartResolver(HttpServletRequest request) {
                 if (MAX_FILE_UPLOAD_SIZE_OVERRIDE_PATHS.contains(request.getServletPath())) {
                     CommonsMultipartResolver multipart = new CommonsMultipartResolver();
-                    multipart.setMaxUploadSize(-1);
-                    multipart.setMaxUploadSizePerFile(-1);
+                    // Bounded like the default resolver (1 MB per file, 10 MB per request) so
+                    // uploads can't exhaust disk or memory
+                    multipart.setMaxUploadSize(10 * 1024 * 1024);
+                    multipart.setMaxUploadSizePerFile(1024 * 1024);
                     return multipart;
                 } else {
                     // returns default implementation

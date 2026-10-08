@@ -19,33 +19,20 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class PasswordResetReferrerPolicyFilter extends OncePerRequestFilter {
 
     private static final String RESET_PAGE_PATH = "/password-reset/reset.html";
-    private static final int REFERRER_LEAK_LEVEL = 7;
 
     @Override
     protected void doFilterInternal(
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        if (shouldApplyUnsafeUrlReferrerPolicy(request)) {
-            response.setHeader("Referrer-Policy", "unsafe-url");
+        // The reset page URL carries the reset token: never leak it through the Referer header
+        if (isResetPage(request)) {
+            response.setHeader("Referrer-Policy", "no-referrer");
         }
         filterChain.doFilter(request, response);
     }
 
-    private boolean shouldApplyUnsafeUrlReferrerPolicy(HttpServletRequest request) {
+    private boolean isResetPage(HttpServletRequest request) {
         String requestUri = request.getRequestURI();
-        if (requestUri == null || !requestUri.endsWith(RESET_PAGE_PATH)) {
-            return false;
-        }
-
-        String level = request.getParameter("level");
-        if (level == null) {
-            return false;
-        }
-
-        try {
-            return Integer.parseInt(level) == REFERRER_LEAK_LEVEL;
-        } catch (NumberFormatException exception) {
-            return false;
-        }
+        return requestUri != null && requestUri.endsWith(RESET_PAGE_PATH);
     }
 }
