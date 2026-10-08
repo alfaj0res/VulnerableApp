@@ -2,9 +2,8 @@
 -- Real password: 'not_needed_for_sqli'
 INSERT INTO auth_users VALUES (1, 'admin_sqli', 'not_needed_for_sqli', NULL, 'PLAIN', 1, 'admin_sqli@example.com', 'ADMIN');
 
--- Level 2: Sensitive Data Logging
--- Real password: 'v9K#2mLp!8zQ'
-INSERT INTO auth_users VALUES (2, 'admin_logs', 'v9K#2mLp!8zQ', NULL, 'PLAIN', 2, 'admin_logs@example.com', 'ADMIN');
+-- Level 2: Sensitive Data Logging (fixed: the logged password was rotated to a random 24-character one, stored as BCrypt like Level 9)
+INSERT INTO auth_users VALUES (2, 'admin_logs', '$2a$10$4e8TyNHMoArQ/swF48Gf/u13r6KixelE3FtkZgJwIFu3fGGs4M5vK', NULL, 'BCRYPT', 2, 'admin_logs@example.com', 'ADMIN');
 
 -- Level 3: Plaintext Storage (fixed: stored as a salted BCrypt hash)
 INSERT INTO auth_users VALUES (3, 'admin_plain', '$2a$10$ruCEMrNO2VN4ZNZb50aChuU81LUxqW/uBTFpo5QpzX8KXYzDwiT8u', NULL, 'BCRYPT', 3, 'admin_plain@example.com', 'ADMIN');
@@ -28,5 +27,5 @@ INSERT INTO auth_users VALUES (8, 'admin_weak', '$2a$10$Hk.G8quhXkpRGAT6GEXM1u33
 -- Bcrypt hash for '9fG#2hJk*LmN!8qR'
 INSERT INTO auth_users VALUES (9, 'admin_secure', '$2a$10$1WiFUNqUY/vHTzR2QtuMQuzCLK3aZEdjEUpqS4msXOevaCz7Wobe.', NULL, 'BCRYPT', 9, 'admin_secure@example.com', 'ADMIN');
 
--- Level 10: Low-iteration BCrypt (fixed: re-hashed with the default cost factor 10)
-INSERT INTO auth_users VALUES (10, 'admin_lowcost', '$2a$10$o7dqDQMcC45DMagjaVTmkurbX383desbKFpcr8vZwZeUatjVoQyvq', NULL, 'BCRYPT', 10, 'admin_lowcost@example.com', 'ADMIN');
+-- Level 10: Low-iteration BCrypt (fixed: the common password was rotated to a random 24-character one, BCrypt cost 10 like Level 9)
+INSERT INTO auth_users VALUES (10, 'admin_lowcost', '$2a$10$HgfDL7zwCNn/og6RCnd9xukueUMAB28CCO6YaBoXr8nMeNFY3YMHe', NULL, 'BCRYPT', 10, 'admin_lowcost@example.com', 'ADMIN');
